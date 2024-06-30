@@ -3,7 +3,9 @@ package com.thullyoo.login.system.services;
 import com.thullyoo.login.system.DTOs.LoginRequest;
 import com.thullyoo.login.system.DTOs.LoginResponse;
 import com.thullyoo.login.system.entities.user.User;
+import com.thullyoo.login.system.exceptions.EmailOrPasswordInvalid;
 import com.thullyoo.login.system.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class LoginService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Transactional
     public LoginResponse loginUser(LoginRequest loginRequest) throws CredentialException {
         Optional<User> user = userRepository.findByEmail(loginRequest.email());
 
@@ -32,7 +35,7 @@ public class LoginService {
         }
 
         if (!passwordEncoder.matches(loginRequest.password(), user.get().getPassword())){
-            throw new CredentialException("Usuário ou senha incorretos");
+            throw new EmailOrPasswordInvalid("Usuário ou senha incorretos");
         }
 
         LoginResponse loginResponse = new LoginResponse(jwtService.createToken(user.get().getEmail(), user.get().getRole()), 360L);

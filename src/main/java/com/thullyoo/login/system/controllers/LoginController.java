@@ -3,6 +3,7 @@ package com.thullyoo.login.system.controllers;
 import com.thullyoo.login.system.DTOs.LoginRequest;
 import com.thullyoo.login.system.DTOs.LoginResponse;
 import com.thullyoo.login.system.services.LoginService;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws CredentialException {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) throws CredentialException {
         return ResponseEntity.ok(loginService.loginUser(loginRequest));
     }
 
