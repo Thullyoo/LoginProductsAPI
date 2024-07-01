@@ -1,5 +1,6 @@
 package com.thullyoo.login.system.entities.order;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thullyoo.login.system.entities.product.Product;
 import com.thullyoo.login.system.entities.user.User;
 import jakarta.persistence.*;
@@ -14,7 +15,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    @ManyToMany
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "TB_ORDER_PRODUCTS",
             joinColumns = @JoinColumn(name = "order_id"),
@@ -22,7 +24,8 @@ public class Order {
     )
     private Set<Product> products;
 
-    @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
