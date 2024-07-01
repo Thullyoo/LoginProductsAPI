@@ -30,3 +30,61 @@ Este é um projeto Java Spring boot, que consiste em uma API para cadastro e log
 6. Inicie a aplicação
 
 A aplicação estará rodando em `http://localhost:8080`.
+
+### Endpoints
+
+- `POST /login`: Logar usuário.  (Não é necessário estar autenticado, pois geram o token para a autenticação)
+- `POST /register`: Registrar usuário. (Não é necessário estar autenticado, pois geram o token para a autenticação)
+- `POST /product/register`: Registrar produto. (É necessário estar autenticado via Bearer token como usuário com role ADMIN)
+- `POST /order/create`: Criar pedido. (É necessário estar autenticado via Bearer token com role COMMON) 
+- `GET /users/view`: Visualizar todos os usuários. (É necessário estar autenticado via Bearer token como usuário com role ADMIN)
+- `GET /product/view`: Visualizar todos os produtos. (É necessário estar autenticado via Bearer token como usuário com role ADMIN ou COMMON)
+- `GET /order/view/all`: Visualizar todos os pedidos. (É necessário estar autenticado via Bearer token como usuário com role ADMIN)
+- `GET /order/view`: Visualiza todos os pedidos de um usuário. (É necessário estar autenticado via Bearer token com role COMMON)
+
+### Formato dos dados
+
+As requisições e respostas são no formato JSON. Exemplo de como se deve passar o JSON no POST:
+
+**POST /login:
+
+```json
+{
+    "name": "name",
+    "password": "password",
+    "email": "email"   
+}
+```
+
+**POST /register:
+
+```json
+{
+  "email": "email",
+  "password": "password"
+}
+```
+
+**POST /product/register
+
+```json
+{
+  "name": "name",
+  "price": 0.0,
+  "quantity": 1
+}
+```
+
+**POST /order/create
+
+```json
+{
+  "productsId": [
+    1,
+    2
+  ],
+  "emailUser": "email@email.com"
+}
+```
+
+
