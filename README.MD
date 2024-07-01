@@ -46,7 +46,7 @@ A aplicação estará rodando em `http://localhost:8080`.
 
 As requisições e respostas são no formato JSON. Exemplo de como se deve passar o JSON no POST:
 
-**POST /login:
+POST /login:
 
 ```json
 {
@@ -56,7 +56,7 @@ As requisições e respostas são no formato JSON. Exemplo de como se deve passa
 }
 ```
 
-**POST /register:
+POST /register:
 
 ```json
 {
@@ -65,7 +65,7 @@ As requisições e respostas são no formato JSON. Exemplo de como se deve passa
 }
 ```
 
-**POST /product/register
+POST /product/register
 
 ```json
 {
@@ -75,7 +75,7 @@ As requisições e respostas são no formato JSON. Exemplo de como se deve passa
 }
 ```
 
-**POST /order/create
+POST /order/create
 
 ```json
 {
