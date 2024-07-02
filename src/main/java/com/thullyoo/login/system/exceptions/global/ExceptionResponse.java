@@ -1,4 +1,4 @@
-package com.thullyoo.login.system.exceptions;
+package com.thullyoo.login.system.exceptions.global;
 
 import org.springframework.http.HttpStatus;
 

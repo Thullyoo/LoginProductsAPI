@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record OrderResponse(List<Product> products, Double total) {
+public record OrderResponse(List<ProductOrderResponse> products, Double total) {
 }

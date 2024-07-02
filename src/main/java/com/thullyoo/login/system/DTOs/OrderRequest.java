@@ -7,5 +7,5 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record OrderRequest(@NotNull(message = "E-mail não pode ser null") @NotBlank(message = "E-mail não pode ser em branco") String emailUser,
-                           @NotEmpty(message = "Lista de produtos não pode ser vazia") List<Long> productsId) {
+                           @NotEmpty(message = "Lista de produtos não pode ser vazia") List<ProductIdQuantityRequest> productsIdQuantity) {
 }

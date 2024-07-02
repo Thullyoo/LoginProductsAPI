@@ -42,5 +42,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> productIsPresent(UserIsPresentException e){
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ExceptionResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY));
     }
+
+    @ExceptionHandler(QuantityInsufficientException.class)
+    public ResponseEntity<ExceptionResponse> quantityInsufficient(QuantityInsufficientException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST));
+    }
 }
 

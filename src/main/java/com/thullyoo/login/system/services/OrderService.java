@@ -2,16 +2,17 @@ package com.thullyoo.login.system.services;
 
 import com.thullyoo.login.system.DTOs.OrderRequest;
 import com.thullyoo.login.system.DTOs.OrderResponse;
+import com.thullyoo.login.system.DTOs.ProductOrderResponse;
 import com.thullyoo.login.system.entities.order.Order;
 import com.thullyoo.login.system.entities.product.Product;
 import com.thullyoo.login.system.entities.user.User;
 import com.thullyoo.login.system.exceptions.ProductNotFoundException;
+import com.thullyoo.login.system.exceptions.QuantityInsufficientException;
 import com.thullyoo.login.system.exceptions.UserNotFoundException;
 import com.thullyoo.login.system.repositories.OrderRepository;
 import com.thullyoo.login.system.repositories.ProductRepository;
 import com.thullyoo.login.system.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,22 +33,35 @@ public class OrderService {
 
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest) throws CredentialNotFoundException {
+
         Optional<User> user = userRepository.findByEmail(orderRequest.emailUser());
+
         if (user.isEmpty()){
             throw new UserNotFoundException("Usuário não encontrado");
         }
 
         Set<Product> listaDeProdutos = new HashSet<>();
         Double total = 0.0;
+        List<ProductOrderResponse> productOrderResponses = new ArrayList<>();
 
+        for (Integer i = 0; i < orderRequest.productsIdQuantity().size(); i++){
 
-        for (Long id : orderRequest.productsId()){
-            Optional<Product> product = productRepository.findById(id);
+            Optional<Product> product = productRepository.findById(orderRequest.productsIdQuantity().get(i).productId());
+
             if (product.isEmpty()){
                 throw new ProductNotFoundException("Produto não encontrado");
             }
+            if (product.get().getQuantity() <= 0 || (product.get().getQuantity() - orderRequest.productsIdQuantity().get(i).quantity() < 0)){
+                throw new QuantityInsufficientException("Quantidade do produto " + product.get().getName() + " insuficente");
+            }
+            product.get().setQuantity(product.get().getQuantity() - orderRequest.productsIdQuantity().get(i).quantity());
+
+            productRepository.save(product.get());
+
             listaDeProdutos.add(product.get());
-            total += product.get().getPrice();
+            total += (product.get().getPrice() * orderRequest.productsIdQuantity().get(i).quantity());
+
+            productOrderResponses.add(new ProductOrderResponse(product.get().getName(), product.get().getPrice() * orderRequest.productsIdQuantity().get(i).quantity(), orderRequest.productsIdQuantity().get(i).quantity()));
         }
 
         Order order = new Order();
@@ -57,7 +71,11 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        return new OrderResponse(listaDeProdutos.stream().toList(), total);
+
+
+
+
+        return new OrderResponse(productOrderResponses, total);
     }
 
     public List<Order> getAllOrders(){
